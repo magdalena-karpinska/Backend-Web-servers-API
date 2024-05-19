@@ -1,23 +1,20 @@
-// Import Express
 const express = require('express');
-const morgan = require('morgan');
-
-// Create an app
 const app = express();
 
-app.use(morgan('tiny'));
-// Serve static files
-app.use(express.static('static'));
-
-//Define a route
 app.get('/', (req, res) => {
-    res.send('Hello fellow developer');
+    // res.send('Hello');
+    const dev = {
+        id: 1,
+        name: 'Marcus Dev',
+        email: 'marcus@salt.dev'
+    }
+    res
+    .status(201)
+    .setHeader('location', `/api/developers/1`)
+    .json(dev);
 });
 
-//Set the port
 const port = 3000;
-
-// Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
 });
