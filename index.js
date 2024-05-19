@@ -4,8 +4,10 @@ const http = require('http');
 // Step 2: Create the server
 const server = http.createServer((req, res) => {
     res.statusCode = 200; // Sets status code to 200 (OK)
-    res.setHeader('Content-Type', 'text/plain'); // Set content type to plain text
-    res.end('Hello fellow developer!'); // Send response and end the connection
+    // res.setHeader('Content-Type', 'text/plain'); // Set content type to plain text
+    // res.end('Hello fellow developer!'); // Send response and end the connection
+    res.setHeader('Content-Type', 'text/html');
+    res.end('<h1>Hello fellow developer!</h1>');
 });
 
 // Step 3: Define the hostname and port
