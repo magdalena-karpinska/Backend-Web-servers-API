@@ -19,22 +19,37 @@
 //     console.log(`Server running at http;//${hostname}:${port}/`)
 // });
 
+// Function to get the file name from URL
+const fileNameOfUrl = (url) => {
+    let fileName = '';
+    // Check if the URL path is just the root
+    if(url.split('/')[1] === '') {
+        fileName = 'index.html'; // Default to index.html for the root URL
+    } else {
+        fileName = url.split('/')[1]; // Get the second part of the URL path
+    }
+    return fileName;
+};
+
 const http = require('http');
 const fs = require('fs');
 
 const server = http.createServer((req, res) => {
-  const content = fs.readFileSync('./static/index.html', 'utf-8');
+    console.log(req);
+    console.log(`The URL for the request was ${req.url}`);
+    console.log(`The Method for the request was ${req.method}`);
+   
+    const fileName = fileNameOfUrl(req.url);
+    const content = fs.readFileSync(`./static/${fileName}`, 'utf-8');
 
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/html');
-  res.end(content);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/html');
+    res.end(content);
+});
 
 const hostname = 'localhost';
 const port = 3000;
 
 server.listen(port, hostname, () => {
-    console.log(`Server running at http;//${hostname}:${port}/`)
-});
-
-
+    console.log(`Server running at http://${hostname}:${port}/`);
 });
