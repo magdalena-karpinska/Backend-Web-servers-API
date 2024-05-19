@@ -1,17 +1,27 @@
 const express = require('express');
 const app = express();
 
-app.get('/', (req, res) => {
-    // res.send('Hello');
-    const dev = {
+const db = [
+    {
         id: 1,
-        name: 'Marcus Dev',
-        email: 'marcus@salt.dev'
+        name: 'Magdalena Karpinska',
+        email: 'magdalena.karpinska13@gmail.com'
+    },
+    {
+        id: 2,
+        name: 'Ignacio Monge',
+        email: 'ignaciomonge@gmail.com'
+    },
+    {
+        id: 3,
+        name: 'Uttejh Reddy',
+        email: 'uttejhreddy.com'
     }
-    res
-    .status(201)
-    .setHeader('location', `/api/developers/1`)
-    .json(dev);
+];
+
+app.get('/api/developers', (req, res) => {
+    // res.send('Hello');
+    res.json(db);
 });
 
 const port = 3000;
