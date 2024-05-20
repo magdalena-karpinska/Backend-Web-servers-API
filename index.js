@@ -19,9 +19,13 @@ const db = [
     }
 ];
 
-app.get('/api/developers', (req, res) => {
-    // res.send('Hello');
-    res.json(db);
+app.get('/api/developers/:id', (req, res) => {
+    const dev = db.find(dev => dev.id == req.params.id); //'==' allows for a comparison between a string (route params) and a numbern (id)
+    if(!dev) {
+        res.status(404).end();
+        return;
+    }
+    res.json(dev);
 });
 
 const port = 3000;
