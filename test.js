@@ -26,7 +26,7 @@ describe('developer API should have endpoints to', () => {
 
     it('get the developer by their ID', function(done) {
         // arrange
-        const api = require('./api.js');
+        const api = require('./api');
 
         // act and assert
         request (app)
@@ -39,13 +39,12 @@ describe('developer API should have endpoints to', () => {
     });
 
     it('create a new developer', function(done) {
-        //arrange
-        const api = require('./api.js');
+        // arrange
 
         // act and assert
         request(app)
         .post('/api/developers/')
-        .set ('Accept', 'application/json')
+        .set('Accept', 'application/json')
         .send({name: 'Elisabeth Boden', email: 'frauelisabeth@gmail.com'})
         .expect('Content-Type', /json/)
         .expect('location', /\/api\/developers\//) // a regular expression used to match any string that contains "/api/developers/".
@@ -55,4 +54,34 @@ describe('developer API should have endpoints to', () => {
         })
         .expect(201, done);
     });
+
+    it('removes a developer with a specific ID and returns 204 status', function (done) {
+        // arrange
+        const api = require('./api');
+        const devIdToDelete = 1;
+
+        // act and assert
+        request(app)
+        .delete(`/api/developer/${devIdToDelete}`)
+        .expect(204)
+        .end((err, res) => {
+            if (err) return done(err);
+
+            // Verify that the developer was actually removed
+            request(app)
+            .get(`/api/developers/${devIdToDelete}`)
+            .expect(404, done);
+        });
+    });
+
+    it('returns status 404 if the developer does not exist', function(done) {
+        // arrange
+        const wrongDevId = 999;
+
+        // act and assert
+        request(app)
+        .delete(`/api/developer/${wrongDevId}`)
+        .expect(404, done);
+    });
+
 });
