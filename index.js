@@ -45,7 +45,7 @@ app.post('/api/developers/', (req, res) => {
         .status(201)
         .setHeader('location', `/api/developers/${newDeveloper.id}`)
         .json({
-            message: 'A new developer successfully added',
+            message: 'Hurray! A new developer successfully added!',
             developer: newDeveloper
         });
 });
@@ -66,22 +66,23 @@ app.delete('/api/developers/:id', (req, res) => {
 
 // PATCH route to update an existing developer
 // In Express one can provide an array of middleware functions as the secobd argument to a route.
-add.patch('/api/developers/:id', [
+app.patch('/api/developers/:id', [
     (req, res, next) => {
         const { body, validationResult } = require('express-validator');
+        // Define validation rules
         body('name').optional().isString().withMessage('Name must be a string');
         body('email').optional().isString().withMessage('Email must be a valid email address');
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        next();
+        next(); // Request can proceed to the actual route handler.
     }
 ], (req, res) => {
     const devId = Number(req.params.id);
-    const devIndex = db.find(dev => dev.id === devId); // Look for a developer by their ID
+    const devIndex = db.findIndex(dev => dev.id === devId); // Find the index of the developer by their ID
 
-    if (!dev) {
+    if (devIndex === -1) {
         res.status(404).json({ message: "I'm sorry! Developer not found :(" }); // 404: Not found if the developer is not found
         return;
     }
@@ -90,11 +91,11 @@ add.patch('/api/developers/:id', [
     const updateData = req.body;
 
     if (updateData.name !== undefined) {
-        dev.name = updateData.name;
+        db[devIndex].name = updateData.name;
     }
 
     if (updateData.email !== undefined) {
-        dev.name = updateData.email;
+        db[devIndex].email = updateData.email;
     }
 
     res.json(dev);
