@@ -44,7 +44,10 @@ app.post('/api/developers/', (req, res) => {
     res
         .status(201)
         .setHeader('location', `/api/developers/${newDeveloper.id}`)
-        .json(newDeveloper);
+        .json({
+            message: 'A new developer successfully added',
+            developer: newDeveloper
+        });
 });
 
 // DELETE route to remove a developer by ID
@@ -62,7 +65,19 @@ app.delete('/api/developers/:id', (req, res) => {
 });
 
 // PATCH route to update an existing developer
-add.patch('/api/developers/:id', (req, res) => {
+// In Express one can provide an array of middleware functions as the secobd argument to a route.
+add.patch('/api/developers/:id', [
+    (req, res, next) => {
+        const { body, validationResult } = require('express-validator');
+        body('name').optional().isString().withMessage('Name must be a string');
+        body('email').optional().isString().withMessage('Email must be a valid email address');
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    }
+], (req, res) => {
     const devId = Number(req.params.id);
     const devIndex = db.find(dev => dev.id === devId); // Look for a developer by their ID
 
