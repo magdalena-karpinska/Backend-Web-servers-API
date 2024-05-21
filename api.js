@@ -48,7 +48,7 @@ app.post('/api/developers/', (req, res) => {
 
     res
         .status(201)
-        .setHeader('location', `/api/developers/${newDeveloper.id}`)
+        .setHeader('Location', `/api/developers/${newDeveloper.id}`)
         .json({
             message: 'Hurray! A new developer successfully added!',
             developer: newDeveloper
@@ -58,14 +58,18 @@ app.post('/api/developers/', (req, res) => {
 // DELETE route to remove a developer by ID
 app.delete('/api/developers/:id', (req, res) => {
     const devId = Number(req.params.id); // Convert the id param to a number
-    const devIndex = db.findIndex(dev => dev.id === devId); // Find the index of the developer by their ID
+    // console.log(`Tries to delete the developer with ID: ${devId}`);
 
+    const devIndex = db.findIndex(dev => dev.id === devId); // Find the index of the developer by their ID
+    // console.log(`Found developer index: ${devIndex}`)
     if (devIndex === -1) {
+        // console.log(`Developer with ID: ${devId} has not been found`)
         res.status(404).end(); // Return 404 if the developer is not found
         return;
     }
 
     db.splice(devIndex, 1); // Remove the developer from the array
+    // console.log(`Developer with ID: ${devId} has been removed`)
     res.status(204).end(); // 204 - no content
 });
 
