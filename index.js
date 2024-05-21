@@ -22,6 +22,11 @@ const db = [
 // Middleware to parse JSON bodies
 app.use(express.json());
 
+//GET route to get a developer array
+app.get('/api/developers/', (req, res) => {
+    res.json(db);
+});
+
 // GET route to get a developer by ID
 app.get('/api/developers/:id', (req, res) => {
     const dev = db.find(dev => dev.id == req.params.id); //'==' allows for a comparison between a string (route params) and a number (id)
