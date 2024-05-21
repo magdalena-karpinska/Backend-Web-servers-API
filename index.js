@@ -61,6 +61,30 @@ app.delete('/api/developers/:id', (req, res) => {
     res.status(204).end(); // 204 - no content
 });
 
+// PATCH route to update an existing developer
+add.patch('/api/developers/:id', (req, res) => {
+    const devId = Number(req.params.id);
+    const devIndex = db.find(dev => dev.id === devId); // Look for a developer by their ID
+
+    if (!dev) {
+        res.status(404).json({ message: "I'm sorry! Developer not found :(" }); // 404: Not found if the developer is not found
+        return;
+    }
+
+    // Update the developer's object with tthe request body data
+    const updateData = req.body;
+
+    if (updateData.name !== undefined) {
+        dev.name = updateData.name;
+    }
+
+    if (updateData.email !== undefined) {
+        dev.name = updateData.email;
+    }
+
+    res.json(dev);
+}) 
+
 // Start the server
 const port = 3000;
 app.listen(port, () => {
